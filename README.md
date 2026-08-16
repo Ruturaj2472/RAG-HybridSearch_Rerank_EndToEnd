@@ -166,7 +166,7 @@ for chunk in chain.stream("What are the 3 vectors in the Transformer architectur
 
 ---
 
-## Key Design Decisions (Interview Talking Points)
+## Key Design Decisions
 
 - **Hybrid retrieval over single-method search** — BM25 catches exact terminology/keyword matches that embeddings can blur together; Chroma's dense vectors catch paraphrased/semantically similar queries. `EnsembleRetriever` fuses both result sets with tunable weights (`0.3` BM25 / `0.7` dense) rather than picking one strategy.
 - **Reranking sits on top of the hybrid retriever, not a single retriever** — the reranker's `base_retriever` is the `EnsembleRetriever` itself, so every candidate reaching the LLM has already survived both a keyword *and* a semantic filter before being relevance-scored by a dedicated cross-encoder-style model (`rerank-v4.0-pro`). This measurably improves precision over similarity-score-only ranking.
